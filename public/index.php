@@ -18,7 +18,7 @@ include VIEWS_PATH . '/header.php';
     <h2>Welcome, <?php echo htmlspecialchars($u['first_name'] . ' ' . $u['last_name']); ?>!</h2>
     <p>Role: <strong><?php echo htmlspecialchars($u['user_type']); ?></strong></p>
     <div class="list-group">
-      <?php if ($u['user_type'] === 'librarian' || $u['user_type'] === 'staff'): ?>
+      <?php if ($u['user_type'] === 'librarian'): ?>
         <a href="books.php" class="list-group-item list-group-item-action">Manage Books</a>
       <?php endif; ?>
       <a href="borrow.php" class="list-group-item list-group-item-action">Borrow / Return</a>
