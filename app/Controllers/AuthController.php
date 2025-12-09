@@ -1,13 +1,13 @@
 <?php
 namespace App\Controllers;
 
-use App\Models\User;
+use App\Models\UserModel; // Changed from User to UserModel
 
 class AuthController {
     private $userModel;
 
     public function __construct($pdo) {
-        $this->userModel = new User($pdo);
+        $this->userModel = new UserModel($pdo);
     }
 
     public function login($username, $password) {

@@ -10,9 +10,8 @@ class ReservationController {
     }
 
     public function listUserReservations() {
-        if(session_status() !== PHP_SESSION_ACTIVE) session_start();
         if(empty($_SESSION['user'])) return [];
-        $userId = $_SESSION['user']['id'];
+        $userId = $_SESSION['user']['user_id']; // Fixed: changed 'id' to 'user_id'
         return $this->model->getByUser($userId);
     }
 

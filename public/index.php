@@ -1,16 +1,16 @@
 <?php
 require_once __DIR__ . '/config.php';
-require_once __DIR__ . '/../app/Models/Database.php';
-require_once __DIR__ . '/../app/Controllers/DashboardController.php';
-include VIEWS_PATH . '/header.php';
-require_login();
 
 use App\Models\Database;
 use App\Controllers\DashboardController;
 
+require_login();
+
 $pdo = Database::connect();
 $controller = new DashboardController($pdo);
 $u = $controller->getCurrentUser();
+
+include VIEWS_PATH . '/header.php';
 ?>
 
 <div class="row">

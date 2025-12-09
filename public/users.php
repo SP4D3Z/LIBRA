@@ -1,13 +1,10 @@
 <?php
 require_once __DIR__ . '/config.php';
-require_once __DIR__ . '/../app/Models/Database.php';
-require_once __DIR__ . '/../app/Models/UserModel.php';
-require_once __DIR__ . '/../app/Controllers/UserController.php';
-include VIEWS_PATH . '/header.php';
-require_login();
 
 use App\Models\Database;
 use App\Controllers\UserController;
+
+require_login();
 
 $pdo = Database::connect();
 $controller = new UserController($pdo);
@@ -35,6 +32,8 @@ if (isset($_GET['err'])) $err = $_GET['err'];
 
 // fetch users
 $users = $controller->getUsers();
+
+include VIEWS_PATH . '/header.php';
 ?>
 <div class="row">
   <div class="col-md-8">
@@ -42,10 +41,9 @@ $users = $controller->getUsers();
     <?php if(!empty($msg)): ?><div class="alert alert-success"><?php echo $msg; ?></div><?php endif; ?>
     <?php if(!empty($err)): ?><div class="alert alert-danger"><?php echo htmlspecialchars($err); ?></div><?php endif; ?>
     
-    <!-- Add delete confirmation script -->
     <script>
     function confirmDelete(userId, userName) {
-        if (confirm('Are you sure you want to delete user: ' + userName + '?\nThis action cannot be undone.')) {
+        if (confirm('Are you sure you want to deactivate user: ' + userName + '?')) {
             window.location.href = 'users.php?delete=' + userId;
         }
     }
@@ -76,11 +74,10 @@ $users = $controller->getUsers();
             <td><?php echo $r['created_at']; ?></td>
             <?php if(in_array(user()['user_type'], ['librarian', 'staff'])): ?>
             <td>
-              <!-- Delete button with confirmation -->
               <button class="btn btn-sm btn-danger" 
                       onclick="confirmDelete(<?php echo $r['user_id']; ?>, '<?php echo htmlspecialchars($r['username']); ?>')"
                       <?php echo $r['user_id'] == user()['user_id'] ? 'disabled' : ''; ?>>
-                Delete
+                Deactivate
               </button>
               <?php if($r['user_id'] == user()['user_id']): ?>
                 <small class="text-muted">(Your account)</small>
@@ -102,7 +99,7 @@ $users = $controller->getUsers();
       <div class="mb-2"><input class="form-control" name="last_name" placeholder="Last Name" required></div>
       <div class="mb-2"><input class="form-control" name="phone" placeholder="Phone Number"></div>
       <div class="mb-2"><input class="form-control" name="address" placeholder="Address"></div>
-      <div class="mb-2"><input class="form-control" name="password" placeholder="Password" required></div>
+      <div class="mb-2"><input class="form-control" name="password" placeholder="Password" type="password" required></div>
       <div class="mb-2">
         <select name="user_type" class="form-control">
           <option value="student">Student</option>

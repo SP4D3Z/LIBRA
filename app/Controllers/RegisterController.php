@@ -6,11 +6,11 @@ use PDOException;
 
 class RegisterController {
     private $model;
-    public function __construct($pdo) { $this->model = new UserModel($pdo); }
+    public function __construct($pdo) { 
+        $this->model = new UserModel($pdo); 
+    }
 
     public function handleRegister($data) {
-        if (session_status() !== PHP_SESSION_ACTIVE) session_start();
-
         $err = '';
         $msg = '';
 
@@ -38,42 +38,29 @@ class RegisterController {
                 $err = "Please provide and confirm a password.";
             } elseif ($payload['password'] !== $payload['confirm']) {
                 $err = "Passwords do not match!";
+            } elseif (strlen($payload['password']) < 6) {
+                $err = "Password must be at least 6 characters long.";
             } else {
-                try {
-                    // CHECK: username already exists?
-                    if (method_exists($this->model, 'findByUsername')) {
-                        $existing = $this->model->findByUsername($payload['username']);
-                        if ($existing) {
-                            $err = "Username already taken. Choose a different username.";
-                            return [$err, $msg];
-                        }
-                    }
+                // In the try block of handleRegister method:
+try {
+    // CHECK: username already exists?
+    if (method_exists($this->model, 'findByUsername')) {
+        $existing = $this->model->findByUsername($payload['username']);
+        if ($existing) {
+            $err = "Username already taken. Choose a different username.";
+            return [$err, $msg];
+        }
+    }
 
-                    // hash password
-                    $payload['password'] = password_hash($payload['password'], PASSWORD_DEFAULT);
+    // hash password
+    $payload['password'] = password_hash($payload['password'], PASSWORD_DEFAULT);
 
-                    // createUser should return the new user id (lastInsertId)
-                    $newId = $this->model->createUser($payload);
-                    if (!$newId) throw new \Exception('Failed to create user.');
+    // createUser should return the new user id (lastInsertId)
+    $newId = $this->model->createUser($payload);
+    if (!$newId) throw new \Exception('Failed to create user.');
 
-                    // attach role/details if method exists
-                    if (method_exists($this->model, 'createRole')) {
-                        try {
-                            $this->model->createRole($payload['user_type'], $newId, $payload);
-                        } catch (\ArgumentCountError $ae) {
-                            try { $this->model->createRole($payload['user_type'], $newId, $payload); } catch (\Throwable $ignore) {}
-                        } catch (\Throwable $ignore) {}
-                    }
-
-                    $msg = "Account created successfully! You may now login.";
-                } catch (PDOException $e) {
-                    // Unique constraint / duplicate entry
-                    if ($e->getCode() === '23000' || stripos($e->getMessage(), 'Duplicate') !== false) {
-                        $err = "Username already taken. Choose a different username.";
-                    } else {
-                        $err = "Database error: " . $e->getMessage();
-                    }
-                } catch (\Throwable $e) {
+    $msg = "Account created successfully! You may now login.";
+} catch (PDOException $e) {
                     $err = $e->getMessage();
                 }
             }
@@ -82,4 +69,3 @@ class RegisterController {
         return [$err, $msg];
     }
 }
-?>

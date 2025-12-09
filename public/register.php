@@ -1,11 +1,5 @@
 <?php
 require_once __DIR__ . '/config.php';
-require_once __DIR__ . '/../app/Models/Database.php';
-require_once __DIR__ . '/../app/Models/UserModel.php';
-require_once __DIR__ . '/../app/Controllers/RegisterController.php';
-include VIEWS_PATH . '/header.php';
-
-if (session_status() !== PHP_SESSION_ACTIVE) session_start();
 
 use App\Models\Database;
 use App\Controllers\RegisterController;
@@ -16,6 +10,8 @@ $pdo = Database::connect();
 $controller = new RegisterController($pdo);
 
 list($err, $msg) = $controller->handleRegister($_POST);
+
+include VIEWS_PATH . '/header.php';
 ?>
 <div class="row justify-content-center">
   <div class="col-md-6">
@@ -33,7 +29,6 @@ list($err, $msg) = $controller->handleRegister($_POST);
     <div class="mb-2">
         <input class="form-control" name="last_name" placeholder="Last Name" required>
     </div>
-    <!-- ADD PHONE AND ADDRESS FIELDS -->
     <div class="mb-2">
         <input class="form-control" name="phone" placeholder="Phone Number" required>
     </div>
@@ -79,4 +74,4 @@ function toggleExtraFields(){
 }
 toggleExtraFields();
 </script>
-<?php include VIEWS_PATH . '/footer.php';?>
+<?php include VIEWS_PATH . '/footer.php'; ?>

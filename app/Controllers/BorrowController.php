@@ -39,7 +39,7 @@ class BorrowController {
         } 
         // TEACHER: Unlimited books, longer period
         elseif($user_type === 'teacher') {
-            $days = 180; // 180 days for teachers
+            $days = 180; // 180 days for teachers (full semester)
         }
         // STAFF & LIBRARIAN: Standard period
         else {
@@ -64,6 +64,12 @@ class BorrowController {
         $due = date('Y-m-d', strtotime("+$days days"));
         $this->model->borrowBook($user_id, $book_id, $borrowed, $due, $currentUser['user_id']);
         $msg = "Book borrowed successfully. Due: $due";
+        
+        // Add role-specific message
+        if($user_type === 'student') {
+            $remaining = 3 - ($borrowed_count + 1);
+            $msg .= "<br>Remaining books you can borrow this semester: {$remaining}";
+        }
     }
     return [$err, $msg];
 }
@@ -78,9 +84,8 @@ class BorrowController {
     }
     
     public function listUserBorrows() {
-        if(session_status() !== PHP_SESSION_ACTIVE) session_start();
         if(empty($_SESSION['user'])) return [];
-        $userId = $_SESSION['user']['id'];
+        $userId = $_SESSION['user']['user_id']; // Fixed: changed 'id' to 'user_id'
         return $this->model->getByUser($userId);
     }
 
@@ -95,4 +100,4 @@ class BorrowController {
     public function getBooks() {
         return $this->model->getAllBooks();
     }
-}
+}   

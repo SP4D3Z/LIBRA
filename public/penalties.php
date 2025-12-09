@@ -1,12 +1,10 @@
 <?php
 require_once __DIR__ . '/config.php';
-require_once __DIR__ . '/../app/Models/Database.php';
-require_once __DIR__ . '/../app/Models/PenaltyModel.php';
-require_once __DIR__ . '/../app/Controllers/PenaltyController.php';
-include VIEWS_PATH . '/header.php';
 
 use App\Models\Database;
 use App\Controllers\PenaltyController;
+
+require_login();
 
 $pdo = Database::connect();
 $controller = new PenaltyController($pdo);
@@ -14,6 +12,8 @@ $currentUser = user();
 
 $controller->handleMarkPaid($_GET, $currentUser);
 $penalties = $controller->getPenalties();
+
+include VIEWS_PATH . '/header.php';
 ?>
 <div class="row">
   <div class="col-md-12">
@@ -25,7 +25,7 @@ $penalties = $controller->getPenalties();
           <tr>
             <td><?php echo htmlspecialchars($p['first_name'].' '.$p['last_name']); ?></td>
             <td><?php echo htmlspecialchars($p['penalty_type']); ?></td>
-            <td><?php echo number_format($p['amount'],2); ?></td>
+            <td>₱<?php echo number_format($p['amount'],2); ?></td>
             <td><?php echo $p['is_paid'] ? 'Yes' : 'No'; ?></td>
             <td>
               <?php if(!$p['is_paid']): ?>

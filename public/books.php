@@ -1,13 +1,10 @@
 <?php
 require_once __DIR__ . '/config.php';
-require_once __DIR__ . '/../app/Models/Database.php';
-require_once __DIR__ . '/../app/Models/BookModel.php';
-require_once __DIR__ . '/../app/Controllers/BookController.php';
-include VIEWS_PATH . '/header.php';
-require_login();
 
 use App\Models\Database;
 use App\Controllers\BookController;
+
+require_login();
 
 $pdo = Database::connect();
 $controller = new BookController($pdo);
@@ -21,6 +18,8 @@ $msg = $controller->handleAddBook($_POST, $currentUser);
 
 $books = $controller->getBooks();
 $categories = $controller->getCategories();
+
+include VIEWS_PATH . '/header.php';
 ?>
 <style>
 form {

@@ -1,15 +1,10 @@
 <?php
 require_once __DIR__ . '/config.php';
-require_once __DIR__ . '/../app/Models/Database.php';
-require_once __DIR__ . '/../app/Models/BorrowModel.php';
-require_once __DIR__ . '/../app/Models/PenaltyModel.php';
-require_once __DIR__ . '/../app/Models/UserModel.php';
-require_once __DIR__ . '/../app/Controllers/ClearanceController.php';
-include VIEWS_PATH . '/header.php';
-require_login();
 
 use App\Models\Database;
 use App\Controllers\ClearanceController;
+
+require_login();
 
 $pdo = Database::connect();
 $controller = new ClearanceController($pdo);
@@ -47,6 +42,8 @@ if (isset($_GET['check_user']) && is_numeric($_GET['check_user'])) {
 
 // Get all users who might need clearance
 $users = $controller->getUsersForClearance();
+
+include VIEWS_PATH . '/header.php';
 ?>
 <div class="row">
     <div class="col-md-12">

@@ -1,21 +1,16 @@
 <?php
-session_start();
 require_once __DIR__ . '/config.php';
-require_once __DIR__ . '/../app/Models/Database.php';
-require_once __DIR__ . '/../app/Models/User.php';
-require_once __DIR__ . '/../app/Controllers/AuthController.php';
-
 
 use App\Models\Database;
 use App\Controllers\AuthController;
-
-$pdo = Database::connect();
-$auth = new AuthController($pdo);
 
 if (isset($_SESSION['user'])) {
     header('Location: index.php');
     exit;
 }
+
+$pdo = Database::connect();
+$auth = new AuthController($pdo);
 
 $err = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -28,8 +23,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $err = 'Invalid username or password';
     }
 }
+
+include VIEWS_PATH . '/header.php';
 ?>
-<?php include __DIR__ . '/../app/Views/header.php'; ?>
 <div class="row justify-content-center">
   <div class="col-md-6">
     <div style="background: #e3f0ff; border-radius: 16px; box-shadow: 0 2px 12px rgba(0,0,0,0.04); padding: 32px 28px; margin-top: 32px;">
@@ -49,7 +45,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <button class="btn btn-primary w-100">Login</button>
       </form>
       <div class="text-center mt-3">
-        <p>Don’t have an account? <a href="register.php" class="btn btn-outline-secondary btn-sm">Register here</a></p>
+        <p>Don't have an account? <a href="register.php" class="btn btn-outline-secondary btn-sm">Register here</a></p>
       </div>
     </div>
   </div>

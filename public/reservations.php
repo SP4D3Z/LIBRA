@@ -1,13 +1,10 @@
 <?php
 require_once __DIR__ . '/config.php';
-require_once __DIR__ . '/../app/Models/Database.php';
-require_once __DIR__ . '/../app/Models/ReservationModel.php';
-require_once __DIR__ . '/../app/Controllers/ReservationController.php';
-include VIEWS_PATH . '/header.php';
-require_login();
 
 use App\Models\Database;
 use App\Controllers\ReservationController;
+
+require_login();
 
 $pdo = Database::connect();
 $controller = new ReservationController($pdo);
@@ -16,6 +13,8 @@ $msg = $controller->handleReservation($_POST);
 $reservations = $controller->getReservations();
 $users = $controller->getUsers();
 $books = $controller->getBooks();
+
+include VIEWS_PATH . '/header.php';
 ?>
 <div class="row">
   <div class="col-md-8">

@@ -50,8 +50,12 @@ function user() {
 function db() {
     static $pdo = null;
     if ($pdo === null) {
-        require_once APP_ROOT . '/app/Models/Database.php';
         $pdo = \App\Models\Database::connect();
     }
     return $pdo;
 }
+
+// Error handling
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+?>

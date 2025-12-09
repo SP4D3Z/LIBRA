@@ -14,11 +14,13 @@ class ReservationModel {
         $stmt->execute([$user_id, $book_id, $res_date, $exp, 'pending']);
     }
 
+    // FIXED: Removed SQL comment and used correct column name
     public function getByUser($userId) {
-        $sql = "SELECT r.* /*, join book fields if required */
+        $sql = "SELECT r.*, b.title 
                 FROM reservations r
+                JOIN books b ON r.book_id = b.book_id
                 WHERE r.user_id = :uid
-                ORDER BY r.reserved_at DESC";
+                ORDER BY r.reservation_date DESC";
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute([':uid' => $userId]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
