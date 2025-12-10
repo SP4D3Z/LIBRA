@@ -1,288 +1,380 @@
-# 📚 Smart Library Management System
+# **Smart Library Management System - User Manual**
 
-A comprehensive, modern library management system built with PHP MVC architecture. 
-This system streamlines book borrowing, user management, reservations, penalties, and clearance processes for educational institutions.
+## **Table of Contents**
+1. [Introduction](#introduction)
+2. [System Overview](#system-overview)
+3. [User Roles and Permissions](#user-roles-and-permissions)
+4. [Getting Started](#getting-started)
+5. [Core Features](#core-features)
+6. [Clearance System](#clearance-system)
+7. [Troubleshooting](#troubleshooting)
+8. [Security Guidelines](#security-guidelines)
 
-## 🌟 Features
+---
 
-### 👥 User Management
-- **Four User Roles**: Student, Teacher, Staff, Librarian
-- **Role-based Access Control**: Different permissions for each role
-- **User Registration & Authentication**: Secure login with password hashing
-- **Soft Delete Functionality**: Deactivate users without permanent deletion
+## **1. Introduction**
 
-### 📖 Book Management
-- Complete book inventory system
-- ISBN, author, publisher, edition tracking
-- Category-based organization
-- Available copies tracking
-- Archive/Unarchive functionality
+Welcome to the **Smart Library Management System**, a comprehensive web-based platform designed for educational institutions to manage library operations efficiently. This system handles book borrowing, reservations, penalties, and semester clearance processes.
 
-### 🔄 Borrowing System
-- **Smart Borrowing Rules**:
-  - Students: Max 3 books per semester
-  - Teachers: 180-day borrowing period
-  - Staff/Librarians: Standard 30-day period
-- Automatic due date calculation
-- Return management with staff tracking
-- Overdue book detection
-
-### 📅 Reservation System
-- Book reservation with 7-day expiry
-- Reservation status tracking (pending/approved/cancelled/expired)
-- User-specific reservation views
-
-### ⚖️ Penalty System
-- Automatic overdue penalty calculation (₱10/day)
-- Manual penalty marking (damage/lost books)
-- Payment tracking with staff verification
-- Unpaid penalty detection
-
-### ✅ Clearance System
-- Automated clearance eligibility checking
-- Checks for:
-  - Active borrowings
-  - Unpaid penalties
-  - Overdue books
-- Staff/librarian approval process
-
-### 📊 Dashboard & Reports
-- User-specific statistics
-- Active borrowings count
-- Unpaid penalties summary
-- Overdue books tracking
-- Semester-based reporting for students
-
-## 🏗️ System Architecture
-
-### MVC Structure
-```
-app/
-├── Controllers/     # Business logic controllers
-├── Models/         # Database models and business rules
-└── Views/          # Presentation templates
-public/             # Web-accessible entry points
-```
-
-### Database Schema
-- **users**: User accounts and authentication
-- **books**: Book inventory and details
-- **categories**: Book categorization
-- **borrowing_transactions**: Borrowing records
-- **reservations**: Book reservations
-- **penalties**: Fine and penalty tracking
-
-## 🚀 Installation Guide
-
-### Prerequisites
-- PHP 7.4 or higher
-- MySQL 5.7 or higher
-- Web server (Apache/Nginx)
-- Composer (optional)
-
-### Step 1: Clone or Download
-```bash
-git clone <repository-url>
-cd LIBRA
-```
-
-### Step 2: Database Setup
-1. Create a MySQL database:
-```sql
-CREATE DATABASE smart_library CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
-```
-
-2. Import the SQL schema (see `database/schema.sql`)
-
-3. Update database credentials in `/app/Models/Database.php`:
-```php
-$host = '127.0.0.1';
-$db   = 'smart_library';
-$user = 'root';
-$pass = '';
-```
-
-### Step 3: Web Server Configuration
-1. Point your web server to the `/public` directory
-2. Ensure mod_rewrite is enabled (for clean URLs)
-3. Set proper file permissions:
-```bash
-chmod -R 755 app/
-chmod -R 755 public/
-```
-
-### Step 4: Initial Setup
-1. Access the application: `http://your-domain.com/login.php`
-2. Register the first librarian/admin account
-3. Add initial book categories and sample data
-
-## 👨‍💻 User Roles & Permissions
-
-### Librarian
-- Full system access
-- Book management
-- System configuration
-
-### Staff
-- Reservation management
-- Penalty processing
-- Clearance checking
-- Basic user assistance
-
-### Teacher
-- Extended borrowing period (180 days)
-- Unlimited book borrowing
-- View personal borrowings/reservations
-- Pay penalties
-
-### Student
-- Limited borrowing (3 books/semester)
-- Standard borrowing period (30 days)
-- View personal borrowings/reservations
-- Pay penalties
-- Semester-based quota system
-
-## 🔧 Configuration
-
-### Main Configuration File
-`/public/config.php` - Central configuration for:
-- Database connections
-- Session management
-- Autoloading
-- Path definitions
-
-### Environment Variables
-Create `.env` file for sensitive data:
-```env
-DB_HOST=localhost
-DB_NAME=smart_library
-DB_USER=root
-DB_PASS=
-APP_ENV=production
-```
-
-## 📱 Usage Guide
-
-### For Librarians/Staff
-1. **Add Books**: Navigate to Books → Add Book
-2. **Manage Users**: Users → Add/Delete users
-3. **Process Borrowings**: Borrow → Scan/enter book and user IDs
-4. **Handle Returns**: Click "Return" on active borrowings
-5. **Check Clearance**: Clearance → Select user → Approve/Deny
-
-### For Students/Teachers
-1. **Browse Books**: View available books
-2. **Borrow Books**: Select book → Confirm borrowing
-3. **View History**: Check borrowing history and due dates
-4. **Pay Penalties**: View and pay outstanding fines
-5. **Request Clearance**: Apply for end-of-semester clearance
-
-## ⚙️ System Rules & Policies
-
-### Borrowing Rules
-- **Students**: 3 books max per semester, 30-day period
-- **Teachers**: Unlimited books, 180-day period
-- **Staff/Librarians**: Standard 30-day period
-
-### Penalty Calculation
-- Overdue books: ₱10.00 per day
-- Lost books: Book price + processing fee
-- Damaged books: Assessment-based penalty
-
-### Clearance Requirements
-- No active borrowings
-- No unpaid penalties
-- No overdue books
-- Staff/librarian approval
-
-## 🛡️ Security Features
-
-- Password hashing with bcrypt
-- SQL injection prevention (PDO prepared statements)
-- XSS protection (htmlspecialchars output encoding)
-- Session-based authentication
+### **Key Benefits:**
+- Streamlined book borrowing and returning
+- Automated penalty calculation
+- Semester clearance tracking
 - Role-based access control
-- Input validation and sanitization
-- CSRF protection (recommended to implement)
+- Real-time inventory management
 
-## 🔍 Troubleshooting
+## **2. System Overview**
 
-### Common Issues
+### **System Architecture:**
+- **Frontend**: HTML, CSS (Bootstrap 5), JavaScript
+- **Backend**: PHP with MVC-like structure
+- **Database**: MySQL/MariaDB
+- **Authentication**: Session-based with password hashing
 
-1. **Database Connection Error**
-   - Check Database.php credentials
-   - Verify MySQL service is running
-   - Ensure database exists
+### **Browser Requirements:**
+- Google Chrome 90+
+- Firefox 88+
+- Safari 14+
+- Microsoft Edge 90+
+- JavaScript must be enabled
 
-2. **Session Issues**
-   - Check php.ini session settings
-   - Verify write permissions on session directory
-   - Clear browser cookies
+## **3. User Roles and Permissions**
 
-3. **Permission Errors**
-   - Verify user role assignments
-   - Check session variables
-   - Review require_login() function
+### **3.1 Student**
+**Permissions:**
+- View personal borrowing history
+- Reserve available books
+- Check clearance status
+- View personal penalties
+- Borrow books within semester limits
 
-4. **File Not Found Errors**
-   - Check include paths in config.php
-   - Verify file permissions
-   - Review .htaccess configuration
+**Restrictions:**
+- Cannot manage other users
+- Cannot add/remove books
+- Maximum 3 books per semester (configurable)
 
-### Debug Mode
-Enable debug mode in `config.php`:
-```php
-define('DEBUG', true);
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
-```
+### **3.2 Teacher**
+**Permissions:**
+- All student permissions
+- Extended borrowing privileges
+- View teaching-related resources
 
-## 📈 Future Enhancements
+**Special Notes:**
+- Must return all books for semester clearance
+- No semester borrowing limit
 
-### Planned Features
-- [ ] Email notifications for due dates
-- [ ] Barcode/RFID integration
-- [ ] Advanced reporting and analytics
-- [ ] Mobile-responsive design
-- [ ] REST API for mobile apps
-- [ ] Bulk import/export features
-- [ ] Multi-language support
-- [ ] Audit logging system
+### **3.3 Staff**
+**Permissions:**
+- All teacher permissions
+- View all users
+- Deactivate users (except own account)
+- Process basic library operations
 
-### Technical Improvements
-- [ ] Implement Composer for dependencies
-- [ ] Add unit tests
-- [ ] Implement caching layer
-- [ ] Add API documentation
-- [ ] Docker containerization
+### **3.4 Librarian**
+**Permissions:**
+- All staff permissions
+- Full book management (add/edit/remove)
+- Generate reports
+- Manage all reservations
+- Process clearance approvals
+- Manage all penalties
 
-## 🤝 Contributing
+## **4. Getting Started**
 
-1. Fork the repository
-2. Create a feature branch
-3. Commit changes with descriptive messages
-4. Push to the branch
-5. Create a Pull Request
+### **4.1 Registration Process**
+1. Navigate to `register.php`
+2. Fill in required information:
+   - Username (must be unique)
+   - First and Last Name
+   - Phone Number
+   - Address
+   - Password (minimum 8 characters)
+   - User Type
 
-### Development Guidelines
-- Follow PSR-12 coding standards
-- Write meaningful commit messages
-- Update documentation for new features
-- Add tests for new functionality
+3. **Additional fields based on user type:**
+   - **Student**: Program, Year Level
+   - **Teacher/Staff**: Department, Position
+   - **Librarian**: Department (default: Library)
 
+4. Click "Register" to create account
 
-## 🙏 Acknowledgments
+### **4.2 Login Process**
+1. Navigate to `login.php`
+2. Enter your username and password
+3. Click "Login"
+4. You will be redirected to your dashboard
 
-- Bootstrap 5 for frontend components
-- Font Awesome for icons
-- PHP community for best practices
-- All contributors and testers
+### **4.3 Password Requirements:**
+- Minimum 8 characters
+- Include uppercase and lowercase letters
+- Include numbers
+- Include special characters (recommended)
+
+### **4.4 Account Recovery:**
+Contact your librarian or system administrator if you forget your password.
+
+## **5. Core Features**
+
+### **5.1 Dashboard (`index.php`)**
+**Access**: After successful login
+
+**Features:**
+- Welcome message with your name
+- Role display
+- Quick access navigation based on role
+
+### **5.2 Book Management**
+
+#### **For Students/Teachers:**
+1. **Browse Books**: Navigate to books section
+2. **Check Availability**: View available copies
+3. **Borrow Books**: Select book and confirm borrowing
+4. **Return Books**: Return before due date
+
+#### **For Librarians/Staff:**
+1. **Add New Book**: 
+   - Enter ISBN, Title, Author
+   - Set total copies and price
+   - Assign category and location
+
+2. **Edit Book Details**:
+   - Update availability
+   - Modify book information
+   - Change condition status
+
+3. **Archive Books**:
+   - Mark books as archived when no longer available
+   - Archived books are not borrowable
+
+### **5.3 Borrowing Process**
+
+#### **Borrowing Rules:**
+- **Students**: Maximum 3 books per semester
+- **Teachers**: No limit, but must return for clearance
+- **Borrowing Period**: 30 days (configurable)
+- **Renewals**: Contact library staff
+
+#### **Steps to Borrow:**
+1. Search for desired book
+2. Check availability status
+3. Click "Borrow" button
+4. Confirm borrowing details
+5. Receive due date notification
+
+#### **Return Process:**
+1. Go to "My Borrowings" section
+2. Select book to return
+3. Click "Return" button
+4. Get return confirmation
+
+### **5.4 Reservations System**
+
+#### **Making a Reservation:**
+1. Navigate to `reservations.php`
+2. Select user and book
+3. Click "Reserve"
+4. Reservation lasts 7 days
+
+#### **Reservation Statuses:**
+- **Pending**: Waiting for availability
+- **Ready**: Book available for pickup
+- **Fulfilled**: Book borrowed
+- **Expired**: Not picked up within 7 days
+- **Cancelled**: User cancelled reservation
+
+### **5.5 Penalties Management**
+
+#### **Penalty Types:**
+1. **Overdue**: ₱10 per day after due date
+2. **Lost Book**: Replacement cost + processing fee
+3. **Damaged Book**: Repair cost assessment
+4. **Other**: Miscellaneous fines
+
+#### **Viewing Penalties:**
+- Navigate to `penalties.php`
+- View all penalties (librarian/staff)
+- View personal penalties (students/teachers)
+
+#### **Paying Penalties:**
+1. Go to penalties section
+2. Click "Pay Penalties"
+3. Confirm payment
+4. Get receipt from library staff
+
+### **5.6 User Management**
+
+#### **For Librarians/Staff Only:**
+1. **View All Users**: Complete user list
+2. **Add New User**: Create accounts for others
+3. **Deactivate User**: Mark as inactive
+4. **Cannot delete**: System uses soft deletion
+
+#### **Adding Users:**
+1. Navigate to `users.php`
+2. Fill registration form
+3. Set appropriate user type
+4. Click "Create"
+
+#### **Deactivation Rules:**
+- Cannot deactivate own account
+- Deactivated users cannot login
+- Records are preserved for reporting
+
+## **6. Clearance System**
+
+### **6.1 What is Clearance?**
+Clearance is a semester-end process where students and teachers must:
+- Return all borrowed books
+- Pay all outstanding penalties
+- Get approval for next semester enrollment
+
+### **6.2 Checking Clearance Status**
+1. Navigate to `clearance_status.php`
+2. View current status:
+   - **CLEARED**: Green checkmark, no issues
+   - **NOT CLEARED**: Red X, outstanding issues listed
+
+### **6.3 Clearance Requirements**
+
+#### **For Students:**
+- No active book borrowings
+- No overdue books
+- All penalties paid
+- Within semester borrowing limit (3 books)
+
+#### **For Teachers:**
+- No active book borrowings (even if not overdue)
+- All penalties paid
+
+### **6.4 Clearance Issues Resolution**
+
+#### **Common Issues & Solutions:**
+
+1. **Active Borrowings**:
+   - Return all borrowed books at library counter
+   - Use "Return" button in clearance status page
+
+2. **Overdue Books**:
+   - Return immediately
+   - Pay overdue penalties
+   - Contact library for extensions
+
+3. **Unpaid Penalties**:
+   - Go to penalties section
+   - Pay outstanding amounts
+   - Get payment confirmation
+
+4. **Reached Borrowing Limit**:
+   - Return some books
+   - Wait for next semester reset
+   - Request special permission (teachers only)
+
+### **6.5 Clearance Process Steps**
+
+1. **Self-Check**: Verify status on clearance page
+2. **Issue Resolution**: Address all listed problems
+3. **Library Visit**: Get final verification from staff
+4. **Clearance Approval**: Staff marks as cleared in system
+5. **Next Semester**: Ready for new borrowing
+
+### **6.6 Semester Borrowing Summary**
+- View borrowed vs. allowed books
+- Progress bar shows usage percentage
+- Warnings when approaching limit
+- Resets each semester
+
+## **7. Troubleshooting**
+
+### **7.1 Common Issues**
+
+#### **Login Problems:**
+1. **Invalid credentials**: Check username/password
+2. **Account deactivated**: Contact librarian
+3. **Session expired**: Relogin
+
+#### **Borrowing Issues:**
+1. **Book not available**: Reserve or check back later
+2. **Reached limit**: Return some books first
+3. **Clearance block**: Resolve clearance issues
+
+#### **Clearance Issues:**
+1. **Status not updating**: Refresh page or contact staff
+2. **Discrepancies**: Report to library immediately
+
+### **7.2 Error Messages**
+
+#### **"Access Denied"**:
+- Insufficient permissions for current action
+- Contact librarian for access request
+
+#### **"Book Not Available"**:
+- All copies currently borrowed or reserved
+- Try reservation system
+
+#### **"Clearance Required"**:
+- Semester clearance pending
+- Resolve outstanding issues
+
+### **7.3 System Maintenance**
+- Regular backups: Daily at 2:00 AM
+- System updates: Scheduled during breaks
+- Report issues: Use system log or contact IT
+
+## **8. Security Guidelines**
+
+### **8.1 Account Security**
+- Never share login credentials
+- Logout after each session
+- Use strong passwords
+- Report suspicious activity immediately
+
+### **8.2 Data Privacy**
+- Personal information is encrypted
+- Borrowing history is confidential
+- Only librarians see full user data
+
+### **8.3 Safe Practices**
+1. **Public Computers**: Always logout completely
+2. **Password Changes**: Every 90 days recommended
+3. **Phishing Awareness**: System never emails for passwords
+4. **Session Timeout**: 30 minutes of inactivity
+
+### **8.4 Reporting Security Issues**
+Contact your librarian immediately if you notice:
+- Unauthorized access attempts
+- Data discrepancies
+- System vulnerabilities
+- Suspicious user behavior
 
 ---
 
-**Version**: 1.0.0  
-**Last Updated**: December 2025
-**Developed By**: Allen Gabriel R. Briones
+## **Appendices**
+
+### **A. Quick Reference Guide**
+
+| **Action** | **Location** | **Permission Required** |
+|------------|--------------|------------------------|
+| Login | `login.php` | None |
+| Register | `register.php` | None |
+| View Books | `books.php` | All users |
+| Borrow Books | `borrow.php` | Student/Teacher |
+| Check Clearance | `clearance_status.php` | Student/Teacher |
+| View Penalties | `penalties.php` | All users |
+| Make Reservation | `reservations.php` | All users |
+| Manage Users | `users.php` | Staff/Librarian |
+| Generate Reports | `reports.php` | Librarian only |
+
+
+### **B. Glossary**
+
+- **Clearance**: Semester-end approval process
+- **Penalty**: Fine for overdue/lost/damaged books
+- **Reservation**: Holding a book for future borrowing
+- **Transaction**: Single borrowing/returning action
+- **Semester**: Academic term (typically 4-5 months)
 
 ---
-*"Empowering libraries with smart digital solutions"*
+
+**Last Updated**: December 10, 2025  
+**System Version**: 2.1  
+**Document Version**: 1.0
