@@ -24,7 +24,7 @@ include VIEWS_PATH . '/header.php';
       <a href="borrow.php" class="list-group-item list-group-item-action">Borrow / Return</a>
       <a href="reservations.php" class="list-group-item list-group-item-action">Reservations</a>
       <a href="penalties.php" class="list-group-item list-group-item-action">Penalties</a>
-      <?php if ($u['user_type'] === 'librarian' || $u['user_type'] === 'staff'): ?>
+      <?php if ($u['user_type'] === 'staff'): ?>
         <a href="users.php" class="list-group-item list-group-item-action">Users</a>
       <?php endif; ?>
     </div>
